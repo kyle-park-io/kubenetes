@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: p1
+  labels:
+    name: apa000kube
+spec:
+  containers:
+    - name: c1
+      image: test:latest
+      imagePullPolicy: IfNotPresent # local image
+      ports:
+        - containerPort: 3000
+      resources:
+        requests: # 요청 리소스: 최소 필요한 양
+          memory: "64Mi"
+          cpu: "250m"
+        limits: # 리소스 제한: 최대 허용 양
+          memory: "128Mi"
+          cpu: "500m"
