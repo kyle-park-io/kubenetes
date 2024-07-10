@@ -20,7 +20,7 @@ spec:
         cloud.google.com/gke-nodepool: ingress-pool
       containers:
         - name: ingresscon
-          image: "gcr.io/kyle-server-402706/ingress-go:latest"
+          image: 'gcr.io/kyle-server-402706/ingress-go:latest'
           ports:
             - name: http
               containerPort: 80

@@ -20,7 +20,7 @@ spec:
         cloud.google.com/gke-nodepool: service-pool
       containers:
         - name: dexcon
-          image: "gcr.io/kyle-server-402706/dex-node:latest"
+          image: 'gcr.io/kyle-server-402706/dex-node:latest'
           ports:
             # - name: http
             #   containerPort: 80
@@ -36,7 +36,7 @@ spec:
           #     memory: "64Mi"
           #     cpu: "400m"
         - name: hardhatcon
-          image: "gcr.io/kyle-server-402706/hardhat-node:latest"
+          image: 'gcr.io/kyle-server-402706/hardhat-node:latest'
           ports:
             - name: hardhat
               containerPort: 8545

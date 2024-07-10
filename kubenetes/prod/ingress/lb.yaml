@@ -8,7 +8,7 @@ metadata:
     name: apa000dep2
 spec:
   type: LoadBalancer
-  loadBalancerIP: ""
+  loadBalancerIP: ''
   selector:
     app: apa000kube2
   ports:

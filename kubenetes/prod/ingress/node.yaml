@@ -1,32 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blog
+  name: d2
   labels:
-    name: blog
+    name: apa000dep2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blogDep
+      app: apa000kube2
   template:
     metadata:
       labels:
-        app: blogDep
+        app: apa000kube2
     spec:
       # hostNetwork: true
       # dnsPolicy: ClusterFirstWithHostNet
       nodeSelector:
-        cloud.google.com/gke-nodepool: service-pool
+        cloud.google.com/gke-nodepool: ingress-pool
       containers:
-        - name: blogcon
-          image: "gcr.io/kyle-server-402706/site-node:latest"
+        - name: c1
+          image: 'gcr.io/kyle-server-402706/ingress-node:latest'
           ports:
             # - name: http
             #   containerPort: 80
             #   hostPort: 80
             - name: tcp
-              containerPort: 8080
+              containerPort: 3002
               # hostPort: 3003
           # resources:
           #   requests: # 요청 리소스: 최소 필요한 양
