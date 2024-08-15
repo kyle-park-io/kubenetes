@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: site-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: site-app
+  template:
+    metadata:
+      labels:
+        app: site-app
+    spec:
+      containers:
+        - name: site-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/site-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8080

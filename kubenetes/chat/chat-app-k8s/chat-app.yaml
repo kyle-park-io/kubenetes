@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat-app-deployment
+  labels:
+    app: chat-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-app
+  template:
+    metadata:
+      labels:
+        app: chat-app
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: service-pool
+      containers:
+        - name: chat-app-client
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/chat-app-client:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 7070
+        - name: chat-app-envoy
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/chat-app-envoy:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8080
+        - name: chat-app-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/chat-app-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 50051
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-app-client-service
+  labels:
+    app: chat-app
+spec:
+  type: ClusterIP
+  selector:
+    app: chat-app
+  ports:
+    - protocol: TCP
+      port: 7070
+      targetPort: 7070
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-app-envoy-service
+  labels:
+    app: chat-app
+spec:
+  type: ClusterIP
+  selector:
+    app: chat-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat-app-server-service
+  labels:
+    app: chat-app
+spec:
+  type: ClusterIP
+  selector:
+    app: chat-app
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051

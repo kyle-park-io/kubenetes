@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-proxy-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingress-proxy-app
+  template:
+    metadata:
+      labels:
+        app: ingress-proxy-app
+    spec:
+      containers:
+        - name: ingress-proxy-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/ingress-proxy-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8080

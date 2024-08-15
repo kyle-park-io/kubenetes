@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dex-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dex-app
+  template:
+    metadata:
+      labels:
+        app: dex-app
+    spec:
+      containers:
+        - name: dex-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/dex-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8080

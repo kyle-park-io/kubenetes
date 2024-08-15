@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-proxy-app-server-deployment
+  labels:
+    app: ingress-proxy-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ingress-proxy-app
+  template:
+    metadata:
+      labels:
+        app: ingress-proxy-app
+    spec:
+      # host networking config
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+
+      nodeSelector:
+        cloud.google.com/gke-nodepool: ingress-pool
+      containers:
+        - name: ingress-proxy-app-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/ingress-proxy-app-server:latest'
+          ports:
+            - name: http
+              protocol: TCP
+              hostPort: 80
+              containerPort: 80
+            - name: https
+              protocol: TCP
+              hostPort: 443
+              containerPort: 443
+            # - protocol: TCP
+            #   containerPort: 8080
+          # pv
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume
+      # pvc
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: hostpath-pvc

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chat-app
+  template:
+    metadata:
+      labels:
+        app: chat-app
+    spec:
+      containers:
+        - name: chat-client
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/chat-client:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 7070

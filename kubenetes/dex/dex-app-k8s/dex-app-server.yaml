@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dex-app-server-deployment
+  labels:
+    app: dex-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dex-app
+  template:
+    metadata:
+      labels:
+        app: dex-app
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: service-pool
+      containers:
+        - name: dex-app-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/dex-app-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8080
+        - name: dex-app-hardhat
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/dex-app-hardhat:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8545
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dex-app-server-service
+  labels:
+    app: dex-app
+spec:
+  type: ClusterIP
+  selector:
+    app: dex-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
