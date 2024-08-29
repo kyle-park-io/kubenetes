@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ingress-proxy-app-server-deployment
+  name: ingress-reverse-proxy-app-server-deployment
   labels:
-    app: ingress-proxy-app
+    app: ingress-reverse-proxy-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ingress-proxy-app
+      app: ingress-reverse-proxy-app
   template:
     metadata:
       labels:
-        app: ingress-proxy-app
+        app: ingress-reverse-proxy-app
     spec:
       # host networking config
       hostNetwork: true
@@ -21,8 +21,8 @@ spec:
       nodeSelector:
         cloud.google.com/gke-nodepool: ingress-pool
       containers:
-        - name: ingress-proxy-app-server
-          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/ingress-proxy-app-server:latest'
+        - name: ingress-reverse-proxy-app-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/ingress-reverse-proxy-app-server:latest'
           ports:
             - name: http
               protocol: TCP
