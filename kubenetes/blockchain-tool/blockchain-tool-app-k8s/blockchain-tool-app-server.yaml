@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchain-tool-app-server-deployment
+  labels:
+    app: blockchain-tool-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blockchain-tool-app
+  template:
+    metadata:
+      labels:
+        app: blockchain-tool-app
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: service-pool
+      containers:
+        - name: blockchain-tool-app-block-timestamp
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/block-timestamp-app-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8080
+        - name: blockchain-tool-app-transfer-tracker
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/transfer-tracker-app-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 9090
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: blockchain-tool-app-server-service
+  labels:
+    app: blockchain-tool-app
+spec:
+  type: ClusterIP
+  selector:
+    app: blockchain-tool-app
+  ports:
+    - name: block-timestamp-service
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: transfer-tracker-service
+      protocol: TCP
+      port: 9090
+      targetPort: 9090
