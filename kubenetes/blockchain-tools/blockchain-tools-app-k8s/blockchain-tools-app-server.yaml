@@ -1,43 +1,52 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blockchain-tool-app-server-deployment
+  name: blockchain-tools-app-server-deployment
   labels:
-    app: blockchain-tool-app
+    app: blockchain-tools-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blockchain-tool-app
+      app: blockchain-tools-app
   template:
     metadata:
       labels:
-        app: blockchain-tool-app
+        app: blockchain-tools-app
     spec:
       nodeSelector:
         cloud.google.com/gke-nodepool: service-pool
       containers:
-        - name: blockchain-tool-app-block-timestamp
+        - name: blockchain-tools-app-block-timestamp
           image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/block-timestamp-app-server:latest'
           ports:
             - protocol: TCP
               containerPort: 8080
-        - name: blockchain-tool-app-transfer-tracker
+          # pvc
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume
+        - name: blockchain-tools-app-transfer-tracker
           image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/transfer-tracker-app-server:latest'
           ports:
             - protocol: TCP
               containerPort: 9090
+      # pvc
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: timestamp-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: blockchain-tool-app-server-service
+  name: blockchain-tools-app-server-service
   labels:
-    app: blockchain-tool-app
+    app: blockchain-tools-app
 spec:
   type: ClusterIP
   selector:
-    app: blockchain-tool-app
+    app: blockchain-tools-app
   ports:
     - name: block-timestamp-service
       protocol: TCP

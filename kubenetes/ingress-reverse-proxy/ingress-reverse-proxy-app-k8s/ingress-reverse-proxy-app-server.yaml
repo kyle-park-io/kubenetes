@@ -34,7 +34,7 @@ spec:
               containerPort: 443
             # - protocol: TCP
             #   containerPort: 8080
-          # pv
+          # pvc
           volumeMounts:
             - mountPath: /data
               name: data-volume
