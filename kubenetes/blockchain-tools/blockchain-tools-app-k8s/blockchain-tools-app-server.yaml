@@ -31,11 +31,18 @@ spec:
           ports:
             - protocol: TCP
               containerPort: 9090
+          # pvc
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume2
       # pvc
       volumes:
         - name: data-volume
           persistentVolumeClaim:
             claimName: timestamp-pvc
+        - name: data-volume2
+          persistentVolumeClaim:
+            claimName: tracker-pvc
 ---
 apiVersion: v1
 kind: Service
