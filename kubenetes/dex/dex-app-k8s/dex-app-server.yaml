@@ -22,11 +22,27 @@ spec:
           ports:
             - protocol: TCP
               containerPort: 8080
+          # pvc
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume
         - name: dex-app-hardhat
           image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/dex-app-hardhat:latest'
           ports:
             - protocol: TCP
               containerPort: 8545
+          # pvc
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume2
+      # pvc
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: dex-pvc
+        - name: data-volume2
+          persistentVolumeClaim:
+            claimName: hardhat-pvc
 ---
 apiVersion: v1
 kind: Service
