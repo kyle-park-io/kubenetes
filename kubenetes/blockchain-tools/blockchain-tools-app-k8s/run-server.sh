@@ -1,7 +1,7 @@
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 # # pvc
-# kubectl delete pvc timestamp-pvc
+# kubectl delete pvc timestamp-pvc tracker-pvc
 # kubectl apply -f ${SCRIPT_DIR}/pvc.yaml
 
 # server

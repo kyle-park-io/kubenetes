@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-tcp-app-server-deployment
+  labels:
+    app: redis-tcp-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-tcp-app
+  template:
+    metadata:
+      labels:
+        app: redis-tcp-app
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: service-pool
+      containers:
+        - name: redis-tcp-app-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/redis-tcp-app-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8080
+          # pvc
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume
+        - name: redis
+          image: 'redis:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 6379
+          # pvc
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume2
+      # pvc
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: redis-server-pvc
+        - name: data-volume2
+          persistentVolumeClaim:
+            claimName: redis-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-tcp-app-server-service
+  labels:
+    app: redis-tcp-app
+spec:
+  type: ClusterIP
+  selector:
+    app: redis-tcp-app
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
