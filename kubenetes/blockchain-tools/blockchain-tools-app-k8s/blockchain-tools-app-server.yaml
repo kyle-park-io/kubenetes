@@ -30,7 +30,7 @@ spec:
           image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/transfer-tracker-app-server:latest'
           ports:
             - protocol: TCP
-              containerPort: 9090
+              containerPort: 8081
           # pvc
           volumeMounts:
             - mountPath: /data
@@ -61,5 +61,5 @@ spec:
       targetPort: 8080
     - name: transfer-tracker-service
       protocol: TCP
-      port: 9090
-      targetPort: 9090
+      port: 8081
+      targetPort: 8081
