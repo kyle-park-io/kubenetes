@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orakle-btcfi-backend-app-server-deployment
+  labels:
+    app: orakle-btcfi-backend-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orakle-btcfi-backend-app
+  template:
+    metadata:
+      labels:
+        app: orakle-btcfi-backend-app
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: service-pool
+      containers:
+        - name: orakle-btcfi-backend-app-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/orakle-btcfi-backend-app-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8080
+        - name: postgres
+          image: 'postgres:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 5432
+          # postgres passwoard
+          env:
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          # pvc
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume
+      # pvc
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: orakle-btcfi-backend-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orakle-btcfi-backend-app-server-service
+  labels:
+    app: orakle-btcfi-backend-app
+spec:
+  type: ClusterIP
+  selector:
+    app: orakle-btcfi-backend-app
+  ports:
+    - name: orakle-btcfi-backend-service
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: orakle-btcfi-backend-postgres-service
+      protocol: TCP
+      port: 5432
+      targetPort: 5432
