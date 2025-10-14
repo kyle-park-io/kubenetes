@@ -22,6 +22,11 @@ spec:
           ports:
             - protocol: TCP
               containerPort: 8080
+        - name: btc-options-api-app-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/btc-options-api-app-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8081
         - name: postgres
           image: 'postgres:latest'
           ports:
@@ -56,6 +61,10 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 8080
+    - name: btc-options-api-service
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
     - name: orakle-btcfi-backend-postgres-service
       protocol: TCP
       port: 5432
