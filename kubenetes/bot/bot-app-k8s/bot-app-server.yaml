@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-app-server-deployment
+  labels:
+    app: bot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bot-app
+  template:
+    metadata:
+      labels:
+        app: bot-app
+    spec:
+      nodeSelector:
+        cloud.google.com/gke-nodepool: service-pool
+      containers:
+        - name: bot-app-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/announcement-bot-app-server:latest'
+          ports:
+            - protocol: TCP
+              containerPort: 8080
+          # pvc
+          volumeMounts:
+            - mountPath: /data
+              name: data-volume
+      # pvc
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: bot-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bot-app-server-service
+  labels:
+    app: bot-app
+spec:
+  type: ClusterIP
+  selector:
+    app: bot-app
+  ports:
+    - name: bot-service
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
