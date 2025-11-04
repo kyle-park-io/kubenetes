@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kyle-quant-app-server-deployment
+  name: kyle-quant-backend-app-server-deployment
   labels:
-    app: kyle-quant-app
+    app: kyle-quant-backend-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kyle-quant-app
+      app: kyle-quant-backend-app
   template:
     metadata:
       labels:
-        app: kyle-quant-app
+        app: kyle-quant-backend-app
     spec:
       nodeSelector:
         cloud.google.com/gke-nodepool: service-pool
       containers:
-        - name: kyle-quant-app-server
-          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/kyle-quant-app-server:latest'
+        - name: kyle-quant-backend-app-server
+          image: 'me-west1-docker.pkg.dev/kyle-server-402706/kyle-registry/kyle-quant-backend-app-server:latest'
           ports:
             - protocol: TCP
               containerPort: 8080
@@ -26,13 +26,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: kyle-quant-app-server-service
+  name: kyle-quant-backend-app-server-service
   labels:
-    app: kyle-quant-app
+    app: kyle-quant-backend-app
 spec:
   type: ClusterIP
   selector:
-    app: kyle-quant-app
+    app: kyle-quant-backend-app
   ports:
     - name: kyle-quant-service
       protocol: TCP
