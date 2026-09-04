@@ -6,6 +6,15 @@ metadata:
     app: ingress-reverse-proxy-app
 spec:
   replicas: 1
+  # This pod binds hostPort 80/443 and hostNetwork, which are exclusive per
+  # node, and the ingress pool has a single node. A RollingUpdate would start
+  # the replacement before retiring the old pod, so the new pod can never get
+  # the ports and sits Pending until the rollout times out -- while `kubectl
+  # rollout restart` reports success and the old pod keeps serving. That is a
+  # silent non-deploy, which is worse than the brief outage Recreate causes:
+  # here the outage is explicit and the deploy actually happens.
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: ingress-reverse-proxy-app
