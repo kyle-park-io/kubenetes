@@ -6,6 +6,16 @@ metadata:
     app: redis-tcp-app
 spec:
   replicas: 1
+  # Redis runs in this pod and keeps its snapshot on redis-pvc. A RollingUpdate
+  # started the new pod first, so its Redis loaded the snapshot while the old
+  # Redis was still taking writes, and the old one saved its last state only
+  # when it stopped, after the new one had read the file: every deploy could
+  # lose the writes since the last snapshot (save 3600 1, so up to an hour of
+  # view counts). On 2026-11-19 00:25 KST the two pods ran together for 36s.
+  # Recreate stops the old pod, and Redis saves, before the new one starts;
+  # presence and view counts are down for those few seconds instead.
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: redis-tcp-app
